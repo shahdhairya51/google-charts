@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Histogram and Scatter Plot with D3.js</title>
+		<!-- Include D3.js library -->
+		<script src="https://d3js.org/d3.v7.min.js"></script>
+	</head>
+	<body>
+		<!-- Container for the histogram -->
+		<div id="histogram" style="width: 600px; height: 400px; float: left;"></div>
+
+		<!-- Container for the scatter plot -->
+		<div id="scatter-plot" style="width: 600px; height: 400px; float: left;"></div>
+
+		<script type="text/javascript">
+			// Sample data
+			const data = [
+				['Year', 'Sales'],
+				['2010', 1200],
+				['2011', 1300],
+				['2012', 700],
+				['2013', 1000],
+				['2014', 2000],
+				['2015', 1200],
+				['2016', 5400],
+				['2017', 4500],
+				['2018', 5000],
+				['2019', 5400],
+				['2020', 1400],
+				['2021', 2100],
+				['2022', 3300],
+				['2023', 4700],
+				['2024', 6100],
+			];
+
+			// Create SVG elements for the histogram and scatter plot
+			const histogramSvg = d3.select('#histogram')
+				.append('svg')
+				.attr('width', 600)
+				.attr('height', 400);
+
+			const scatterPlotSvg = d3.select('#scatter-plot')
+				.append('svg')
+				.attr('width', 600)
+				.attr('height', 400);
+
+			// Define margins and dimensions
+			const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+			const width = 600 - margin.left - margin.right;
+			const height = 400 - margin.top - margin.bottom;
+
+			// Create scales for the histogram
+			const xScale = d3.scaleBand()
+				.domain(data.slice(1).map(d => d[0]))
+				.range([margin.left, width - margin.right])
+				.padding(0.1);
+
+			const yScale = d3.scaleLinear()
+				.domain([0, d3.max(data.slice(1), d => d[1])])
+				.nice()
+				.range([height - margin.bottom, margin.top]);
+
+			// Create scales for the scatter plot
+			const xScatterScale = d3.scaleLinear()
+				.domain([0, d3.max(data.slice(1), d => d[1])])
+				.nice()
+				.range([margin.left, width - margin.right]);
+
+			const yScatterScale = d3.scaleLinear()
+				.domain([2010, 2024]) // Assuming the x-axis represents years
+				.nice()
+				.range([height - margin.bottom, margin.top]);
+
+			// Create axes
+			const xAxis = d3.axisBottom(xScale);
+			const yAxis = d3.axisLeft(yScale);
+
+			// Create histogram bars
+			histogramSvg.selectAll('rect')
+				.data(data.slice(1))
+				.enter()
+				.append('rect')
+				.attr('x', d => xScale(d[0]))
+				.attr('y', d => yScale(d[1]))
+				.attr('width', xScale.bandwidth())
+				.attr('height', d => height - margin.bottom - yScale(d[1]))
+				.attr('fill', 'steelblue');
+
+			// Append axes to the histogram
+			histogramSvg.append('g')
+				.attr('class', 'x-axis')
+				.attr('transform', `translate(0,${height - margin.bottom})`)
+				.call(xAxis);
+
+			histogramSvg.append('g')
+				.attr('class', 'y-axis')
+				.attr('transform', `translate(${margin.left},0)`)
+				.call(yAxis);
+
+			// Create the scatter plot points
+			scatterPlotSvg.selectAll('circle')
+				.data(data.slice(1))
+				.enter()
+				.append('circle')
+				.attr('cx', d => xScatterScale(d[1]))
+				.attr('cy', d => yScatterScale(parseInt(d[0])))
+				.attr('r', 5)
+				.attr('fill', 'orange');
+
+			// Append axes to the scatter plot
+			scatterPlotSvg.append('g')
+				.attr('class', 'x-axis')
+				.attr('transform', `translate(0,${height - margin.bottom})`)
+				.call(xAxis);
+
+			scatterPlotSvg.append('g')
+				.attr('class', 'y-axis')
+				.attr('transform', `translate(${margin.left},0)`)
+				.call(yAxis);
+		</script>
+	</body>
+</html>

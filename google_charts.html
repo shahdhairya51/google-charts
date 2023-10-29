@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pie and Line Charts with Google Charts</title>
+	<!-- Include Google Charts library -->
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+	<!-- Container for the pie chart -->
+	<div id="pie-chart" style="width: 600px; height: 500px; float: left;"></div>
+
+	<!-- Container for the line chart -->
+	<div id="line-chart" style="width: 1000px; height: 500px; float: left;"></div>
+
+	<script type="text/javascript">
+		// Load the Google Charts library
+		google.charts.load('current', {'packages':['corechart']});
+		google.charts.setOnLoadCallback(drawCharts);
+
+		function drawCharts() {
+			// Sample data for the line chart
+			const data = google.visualization.arrayToDataTable([
+				['Year', 'Sales'],
+				['2010', 1200],
+				['2011', 1300],
+				['2012', 700],
+				['2013', 1000],
+				['2014', 2000],
+				['2015', 1200],
+				['2016', 5400],
+				['2017', 4500],
+				['2018', 5000],
+				['2019', 5400],
+				['2020', 1400],
+				['2021', 2100],
+				['2022', 3300],
+				['2023', 4700],
+				['2024', 6100],
+			]);
+
+			// Options for the pie chart
+			const pieOptions = {
+				title: 'Pie Chart for Sales Data (2010-2024)',
+				width: 600,
+				height: 500,
+			};
+
+			// Options for the line chart
+			const lineOptions = {
+				title: 'Line Chart for Sales Data (2010-2024)',
+				width: 1000,
+				height: 500,
+				curveType: 'function',
+				legend: { position: 'bottom' },
+			};
+
+			// Create a pie chart and specify the container element
+			const pieChart = new google.visualization.PieChart(document.getElementById('pie-chart'));
+
+			// Create a line chart and specify the container element
+			const lineChart = new google.visualization.LineChart(document.getElementById('line-chart'));
+
+			// Draw the charts with the data and options
+			pieChart.draw(data, pieOptions);
+			lineChart.draw(data, lineOptions);
+		}
+	</script>
+</body>
+</html>
